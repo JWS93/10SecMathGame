@@ -3,6 +3,9 @@ $(document).ready (function () {
   var score = 0;
   var answer = 0;
   var solution = 0;
+  var highScore = 0;
+  $('#highScore').html("Today's High Score: " + highScore);
+
   var generateProblem = function () {
     var numOne = function (min, max) {
       min = parseInt($('#chooseMin').val());
@@ -39,14 +42,18 @@ $(document).ready (function () {
     window.clearInterval();
     timeleft = 0;
     timer = null;
+    solution = 0;
+    $('#answer').val('');
     $('#displayTimer').html("Game Over. Final Score: " + score);
+    $('#playAgain').removeClass('d-none');
   }
-  
-  $(document).on('click', '.start', function () {
+
+  var playGame = function () {
     score = 0;
     startTimer();
     generateProblem();
     $('#currentScore').html('Current Score: ' + score);
+    $('#playAgain').addClass('d-none');
     $(document).on('click', '#submit', function (event) {
       event.preventDefault();
       answer = parseInt($('#answer').val());
@@ -56,12 +63,34 @@ $(document).ready (function () {
         timeleft ++;
         score ++;
         $('#currentScore').html('Current Score: ' + score)
-      } else {
+      } else if (timeleft <= 0) {
         gameOver();
         $('#displayTimer').html("Game Over. Final Score: " + score);
         $('#answer').val('');
+        if (score >= highScore) {
+          highScore = score;
+          $('#highScore').html("Today's High Score: " + highScore);
+        }
+      }
+      else if (answer !== solution) {
+        gameOver();
+        $('#displayTimer').html("Game Over. Final Score: " + score);
+        $('#answer').val('');
+        if (score >= highScore) {
+          highScore = score;
+          $('#highScore').html("Today's High Score: " + highScore);
+        }
       }
     })
+  }
+  
+  $(document).on('click', '.start', function () {
+    playGame();
+  })
+
+  $(document).on('click', '#playAgain', function () {
+    playGame()
+
   })
 
 });
