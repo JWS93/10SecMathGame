@@ -1,39 +1,67 @@
-var startTimer = function () {
-  var timeleft = 10;
-  var downloadTimer = setInterval(function(){
-    if(timeleft <= 0){
-      clearInterval(downloadTimer);
-      $('#displayTimer').html("Game Over");
-    } else {
-      $('#displayTimer').html(timeleft + " seconds remaining");
+$(document).ready (function () {
+  var timeleft = 0;
+  var score = 0;
+  var answer = 0;
+  var solution = 0;
+  var generateProblem = function () {
+    var numOne = function (min, max) {
+      min = parseInt($('#chooseMin').val());
+      max = parseInt($('#chooseMax').val());
+      var numberOne = Math.floor(Math.random() * (max - min + 1)) + min;
+      return numberOne;
     }
-    timeleft -= 1;
-  }, 1000);
-}
-
-var generateProblem = function () {
-  var numOne = function (min, max) {
-    var min = parseInt($('#chooseMin').val());
-    var max = parseInt($('#chooseMax').val());
-    var numberOne = Math.floor(Math.random() * (max - min + 1)) + min;
-    return numberOne;
+    var numTwo = function (min, max) {
+      min = parseInt($('#chooseMin').val());
+      max = parseInt($('#chooseMax').val());
+      var numberTwo = Math.floor(Math.random() * (max - min + 1)) + min;
+      return numberTwo
+    }
+    var numberOne = numOne();
+    var numberTwo = numTwo();
+    $('#displayProblem').html('problem: ' + numberOne + '+' + numberTwo);
+    solution = numberOne + numberTwo;
   }
-  var numTwo = function (min, max) {
-    var min = parseInt($('#chooseMin').val());
-    var max = parseInt($('#chooseMax').val());
-    var numberTwo = Math.floor(Math.random() * (max - min + 1)) + min;
-    return numberTwo
+
+  var startTimer = function () {
+    timeleft = 10;
+    var downloadTimer = setInterval(function(){
+      if(timeleft <= 0){
+        clearInterval(downloadTimer);
+        $('#displayTimer').html("Game Over. Final Score: " + score);
+      } else {
+        $('#displayTimer').html(timeleft + " seconds remaining");
+      }
+      timeleft -= 1;
+    }, 1000);
   }
-  var numberOne = numOne();
-  var numberTwo = numTwo();
-  $('#displayProblem').html('problem: ' + numberOne + '+' + numberTwo);
-  var answer = numberOne + numberTwo;
 
-}
-
-$(document).ready (function() {
-  $(document).on('click', '.start', function() {
+  var gameOver = function () {
+    window.clearInterval();
+    timeleft = 0;
+    timer = null;
+    $('#displayTimer').html("Game Over. Final Score: " + score);
+  }
+  
+  $(document).on('click', '.start', function () {
+    score = 0;
     startTimer();
     generateProblem();
+    $('#currentScore').html('Current Score: ' + score);
+    $(document).on('click', '#submit', function (event) {
+      event.preventDefault();
+      answer = parseInt($('#answer').val());
+      if (timeleft > 0 && answer === solution) {
+        $('#answer').val('');
+        generateProblem();
+        timeleft ++;
+        score ++;
+        $('#currentScore').html('Current Score: ' + score)
+      } else {
+        gameOver();
+        $('#displayTimer').html("Game Over. Final Score: " + score);
+        $('#answer').val('');
+      }
+    })
   })
+
 });
