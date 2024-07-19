@@ -30,7 +30,7 @@ $(document).ready (function () {
     var downloadTimer = setInterval(function(){
       if(timeleft <= 0){
         clearInterval(downloadTimer);
-        $('#displayTimer').html("Game Over. Final Score: " + score);
+        gameOver();
       } else {
         $('#displayTimer').html(timeleft + " seconds remaining");
       }
@@ -44,8 +44,9 @@ $(document).ready (function () {
     timer = null;
     solution = 0;
     $('#answer').val('');
-    $('#displayTimer').html("Game Over. Final Score: " + score);
     $('#playAgain').removeClass('d-none');
+    $('#displayTimer').html("Game Over. Final Score: " + score);
+    $('#highScore').html("Today's High Score: " + highScore);
   }
 
   var playGame = function () {
@@ -53,7 +54,6 @@ $(document).ready (function () {
     startTimer();
     generateProblem();
     $('#currentScore').html('Current Score: ' + score);
-    $('#playAgain').addClass('d-none');
     $(document).on('click', '#submit', function (event) {
       event.preventDefault();
       answer = parseInt($('#answer').val());
@@ -62,20 +62,13 @@ $(document).ready (function () {
         generateProblem();
         timeleft ++;
         score ++;
-        $('#currentScore').html('Current Score: ' + score)
-      } else if (timeleft <= 0) {
-        gameOver();
-        $('#displayTimer').html("Game Over. Final Score: " + score);
-        $('#answer').val('');
-        if (score >= highScore) {
-          highScore = score;
-          $('#highScore').html("Today's High Score: " + highScore);
-        }
+        $('#currentScore').html('Current Score: ' + score);
       }
-      else if (answer !== solution) {
+      if (timeleft === 0) {
         gameOver();
         $('#displayTimer').html("Game Over. Final Score: " + score);
         $('#answer').val('');
+        $('#playAgain').removeClass('d-none');
         if (score >= highScore) {
           highScore = score;
           $('#highScore').html("Today's High Score: " + highScore);
@@ -84,13 +77,14 @@ $(document).ready (function () {
     })
   }
   
-  $(document).on('click', '.start', function () {
+  $(document).on('submit', '.chooseRange', function (event) {
+    event.preventDefault();
     playGame();
   })
 
   $(document).on('click', '#playAgain', function () {
     playGame()
-
+    $('#playAgain').addClass('d-none');
   })
 
 });

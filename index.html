@@ -18,14 +18,16 @@
     <div class = "container">
       <div class = "row">
         <div class = "col-12">
-          <h1>10 Second Math Game</h1>
+          <h1 class = "my-3">10 Second Math Game</h1>
           <h5 id = "highScore"></h5>
           <form class = "chooseRange py-3">
             <p>choose your minimum and maximum numbers</p>
             <input id = "chooseMin" placeholder = "minimum number" required>
             <input id = "chooseMax" placeholder = "maximum number" required>
+            </br>
+            <button class = "btn btn-dark btn-lrg start my-3" id = "startGame">Start Game</button>
           </form>
-          <button class = "btn btn-dark btn-lrg start" id = "startGame">Start Game</button>
+          
           <h3 class = "py-3" id = "displayTimer"></h3>
           <div class = "pb-2" id = "displayProblem"></div>
           <form class = "typeAnswer">
