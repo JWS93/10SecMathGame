@@ -6,21 +6,11 @@ $(document).ready (function () {
   var highScore = 0;
   $('#highScore').html("Today's High Score: " + highScore);
 
-  var generateProblem = function () {
-    var numOne = function (min, max) {
-      min = parseInt($('#chooseMin').val());
-      max = parseInt($('#chooseMax').val());
-      var numberOne = Math.floor(Math.random() * (max - min + 1)) + min;
-      return numberOne;
-    }
-    var numTwo = function (min, max) {
-      min = parseInt($('#chooseMin').val());
-      max = parseInt($('#chooseMax').val());
-      var numberTwo = Math.floor(Math.random() * (max - min + 1)) + min;
-      return numberTwo
-    }
-    var numberOne = numOne();
-    var numberTwo = numTwo();
+  var generateProblem = function (min, max) {
+    min = parseInt($('#chooseMin').val());
+    max = parseInt($('#chooseMax').val());
+    var numberOne = Math.floor(Math.random() * (max - min + 1)) + min;
+    var numberTwo = Math.floor(Math.random() * (max - min + 1)) + min;
     $('#displayProblem').html('problem: ' + numberOne + '+' + numberTwo);
     solution = numberOne + numberTwo;
   }
@@ -43,6 +33,10 @@ $(document).ready (function () {
     timeleft = 0;
     timer = null;
     solution = 0;
+    if (score >= highScore) {
+      highScore = score;
+      $('#highScore').html("Today's High Score: " + highScore);
+    }
     $('#answer').val('');
     $('#playAgain').removeClass('d-none');
     $('#displayTimer').html("Game Over. Final Score: " + score);
@@ -66,13 +60,6 @@ $(document).ready (function () {
       }
       if (timeleft === 0) {
         gameOver();
-        $('#displayTimer').html("Game Over. Final Score: " + score);
-        $('#answer').val('');
-        $('#playAgain').removeClass('d-none');
-        if (score >= highScore) {
-          highScore = score;
-          $('#highScore').html("Today's High Score: " + highScore);
-        }
       }
     })
   }
